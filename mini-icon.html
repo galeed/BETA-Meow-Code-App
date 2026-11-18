@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Convertir icono a PNG</title>
+  <style>
+    body { font-family: system-ui; background: #0f0a1a; color: #ede4ff; padding: 30px; text-align: center; }
+    canvas { border: 2px solid #b16dff; border-radius: 20px; margin: 20px auto; display: block; }
+    button { background: linear-gradient(135deg,#b16dff,#ff4d94); color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer; margin: 6px; font-size: 1rem; }
+    button:active { transform: scale(0.96); }
+    .btns { margin-top: 20px; }
+    textarea { width: 90%; max-width: 600px; height: 120px; background: #1a1230; color: #b16dff; border: 1px solid #b16dff; border-radius: 6px; padding: 10px; font-family: monospace; font-size: 0.75rem; margin: 10px auto; display: block; }
+  </style>
+</head>
+<body>
+  <h1>🐱 Convertidor de icono Meow Code</h1>
+  <p>Pega el SVG abajo, haz clic en "Renderizar" y luego descarga cada tamaño.</p>
+
+  <textarea id="svg-input" placeholder="Pega aquí el contenido de icon.svg"></textarea>
+  <button onclick="render()">🔄 Renderizar</button>
+
+  <canvas id="preview" width="512" height="512"></canvas>
+
+  <div class="btns">
+    <button onclick="download(512, 'icon-512.png')">⬇ icon-512.png</button>
+    <button onclick="download(192, 'icon-192.png')">⬇ icon-192.png</button>
+    <button onclick="download(180, 'icon-180.png')">⬇ icon-180.png (iOS)</button>
+    <button onclick="downloadMaskable(512, 'icon-maskable-512.png')">⬇ icon-maskable-512.png</button>
+  </div>
+
+  <script>
+    const svgInput = document.getElementById('svg-input');
+    const canvas = document.getElementById('preview');
+    const ctx = canvas.getContext('2d');
+
+    // Precargar con el SVG de Meow
+    svgInput.value = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1b0f33"/>
+      <stop offset="100%" stop-color="#0f0a1a"/>
+    </linearGradient>
+    <linearGradient id="meow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#b16dff"/>
+      <stop offset="100%" stop-color="#ff4d94"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="100" fill="url(#bg)"/>
+  <path d="M 140 180 L 170 110 L 210 170 Z" fill="url(#meow)"/>
+  <path d="M 372 180 L 342 110 L 302 170 Z" fill="url(#meow)"/>
+  <path d="M 256 140 C 180 140, 130 200, 130 270 C 130 350, 190 400, 256 400 C 322 400, 382 350, 382 270 C 382 200, 332 140, 256 140 Z" fill="none" stroke="url(#meow)" stroke-width="14" stroke-linejoin="round"/>
+  <ellipse cx="215" cy="260" rx="18" ry="26" fill="#4dffb8"/>
+  <ellipse cx="297" cy="260" rx="18" ry="26" fill="#4dffb8"/>
+  <ellipse cx="215" cy="260" rx="6" ry="20" fill="#0f0a1a"/>
+  <ellipse cx="297" cy="260" rx="6" ry="20" fill="#0f0a1a"/>
+  <path d="M 246 305 L 266 305 L 256 318 Z" fill="#ff4d94"/>
+  <path d="M 256 318 Q 240 335 230 328" stroke="#b16dff" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M 256 318 Q 272 335 282 328" stroke="#b16dff" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <g stroke="#b16dff" stroke-width="4" stroke-linecap="round" opacity="0.9">
+    <line x1="180" y1="300" x2="120" y2="295"/>
+    <line x1="180" y1="315" x2="120" y2="320"/>
+    <line x1="332" y1="300" x2="392" y2="295"/>
+    <line x1="332" y1="315" x2="392" y2="320"/>
+  </g>
+  <text x="256" y="210" font-family="Courier New, monospace" font-size="42" font-weight="900" text-anchor="middle" fill="#ffd166">&lt;/&gt;</text>
+</svg>`;
+
+    function render() {
+      const svg = svgInput.value.trim();
+      if (!svg) return;
+      const blob = new Blob([svg], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(blob);
+      const img = new Image();
+      img.onload = () => {
+        ctx.clearRect(0, 0, 512, 512);
+        ctx.drawImage(img, 0, 0, 512, 512);
+        URL.revokeObjectURL(url);
+      };
+      img.onerror = () => alert('SVG inválido');
+      img.src = url;
+    }
+
+    function download(size, filename, padding = 0) {
+      const off = document.createElement('canvas');
+      off.width = size;
+      off.height = size;
+      const c = off.getContext('2d');
+      if (padding > 0) {
+        const inner = size - padding * 2;
+        c.drawImage(canvas, padding, padding, inner, inner);
+      } else {
+        c.drawImage(canvas, 0, 0, size, size);
+      }
+      off.toBlob((blob) => {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }, 'image/png');
+    }
+
+    function downloadMaskable(size, filename) {
+      // Zona segura = 20% de padding en cada lado (spec PWA)
+      const off = document.createElement('canvas');
+      off.width = size;
+      off.height = size;
+      const c = off.getContext('2d');
+      // Fondo con el color base para que no quede transparente
+      c.fillStyle = '#0f0a1a';
+      c.fillRect(0, 0, size, size);
+      const pad = Math.round(size * 0.2);
+      c.drawImage(canvas, pad, pad, size - pad * 2, size - pad * 2);
+      off.toBlob((blob) => {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }, 'image/png');
+    }
+
+    // Render inicial
+    render();
+  </script>
+</body>
+</html>

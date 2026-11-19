@@ -17,16 +17,11 @@
     </filter>
   </defs>
 
-  <!-- Fondo -->
   <rect width="512" height="512" rx="100" fill="url(#bg)"/>
 
-  <!-- Cabeza de gato estilizada (orejas + cara) -->
   <g filter="url(#glow)">
-    <!-- Oreja izquierda -->
     <path d="M 140 180 L 170 110 L 210 170 Z" fill="url(#meow)"/>
-    <!-- Oreja derecha -->
     <path d="M 372 180 L 342 110 L 302 170 Z" fill="url(#meow)"/>
-    <!-- Cara -->
     <path d="M 256 140 
              C 180 140, 130 200, 130 270
              C 130 350, 190 400, 256 400
@@ -35,22 +30,16 @@
           fill="none" stroke="url(#meow)" stroke-width="14" stroke-linejoin="round"/>
   </g>
 
-  <!-- Ojos -->
   <ellipse cx="215" cy="260" rx="18" ry="26" fill="#4dffb8"/>
   <ellipse cx="297" cy="260" rx="18" ry="26" fill="#4dffb8"/>
-
-  <!-- Pupilas felinas -->
   <ellipse cx="215" cy="260" rx="6" ry="20" fill="#0f0a1a"/>
   <ellipse cx="297" cy="260" rx="6" ry="20" fill="#0f0a1a"/>
 
-  <!-- Nariz -->
   <path d="M 246 305 L 266 305 L 256 318 Z" fill="#ff4d94"/>
 
-  <!-- Boquita -->
   <path d="M 256 318 Q 240 335 230 328" stroke="#b16dff" stroke-width="5" fill="none" stroke-linecap="round"/>
   <path d="M 256 318 Q 272 335 282 328" stroke="#b16dff" stroke-width="5" fill="none" stroke-linecap="round"/>
 
-  <!-- Bigotes -->
   <g stroke="#b16dff" stroke-width="4" stroke-linecap="round" opacity="0.9">
     <line x1="180" y1="300" x2="120" y2="295"/>
     <line x1="180" y1="315" x2="120" y2="320"/>
@@ -58,7 +47,6 @@
     <line x1="332" y1="315" x2="392" y2="320"/>
   </g>
 
-  <!-- Etiqueta `</>` en la frente (guiño a "code") -->
   <text x="256" y="210" font-family="Courier New, monospace" font-size="42"
         font-weight="900" text-anchor="middle" fill="#ffd166">&lt;/&gt;</text>
 </svg>

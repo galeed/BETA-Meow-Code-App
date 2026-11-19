@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#0a0d14">
-  <meta name="description" content="Meow Code App - Editor HTML visual con vista previa en vivo">
+  <meta name="theme-color" content="#0f0a1a">
+  <meta name="description" content="Editor HTML visual con vista previa en vivo, temas neón y exportación a PDF">
   <meta name="color-scheme" content="dark">
   <title>Meow Code App</title>
 
@@ -14,9 +14,9 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="MeowCode">
   <link rel="apple-touch-icon" href="./icon-180.png">
-<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
-<link rel="apple-touch-icon" href="./icon-180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+
   <!-- CodeMirror 5 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/abbott.min.css">
@@ -205,7 +205,7 @@
       transform-origin: top left; transition: transform 0.12s ease;
       width: 100%; height: 100%;
     }
-    /* ⚠️ PARCHE CLAVE: solo bloquear interacción CUANDO se está arrastrando */
+    /* Solo bloquear interacción CUANDO se está arrastrando */
     .iframe-zoom-wrapper.zoomed.panning iframe,
     .iframe-zoom-wrapper.space-pan.panning iframe { pointer-events: none; }
     .iframe-zoom-wrapper.zoomed:not(.panning) iframe,
@@ -442,9 +442,7 @@
     }
     body.skin-terminal .zoom-btn:active { background: var(--term-color) !important; color: #000 !important; }
 
-    /* ═══════════════════════════════════════════════════════════
-       SKIN "MEOW" — Violeta neón + acentos rosa gatuno
-       ═══════════════════════════════════════════════════════════ */
+    /* SKIN "MEOW" */
     body.skin-meow {
       --bg-dark: #0f0a1a;
       --bg-panel: rgba(26, 18, 42, 0.72);
@@ -821,7 +819,6 @@
       toastTimer = setTimeout(() => toastEl.classList.remove('show'), duration);
     }
 
-    /* ===================== STATUS ===================== */
     function setStatus(text, color = 'var(--neon-green)') {
       statusTag.textContent = text;
       statusTag.style.color = color;
@@ -861,7 +858,6 @@
             iframeDoc.body.oninput = () => syncVisualToCode(iframeDoc);
             iframeDoc.body.onkeyup = () => syncVisualToCode(iframeDoc);
 
-            // 🆕 Captura de errores JS del usuario
             iframeDoc.defaultView.addEventListener('error', (ev) => {
               setStatus('ERROR JS', 'var(--neon-magenta)');
               toast('⚠️ Error en tu JS: ' + (ev.message || 'desconocido'), 3500);
@@ -904,7 +900,6 @@
 
     function syncVisualToCode(iframeDoc) {
       if (isInternalSync) return;
-      // 🛡️ No sobrescribir si el usuario está escribiendo en el editor
       if (editor.hasFocus()) return;
 
       isInternalSync = true;
@@ -927,10 +922,10 @@
           updatedHTML = html_beautify(updatedHTML, { indent_size: 2, wrap_line_length: 0 });
         }
         const scrollInfo = editor.getScrollInfo();
-        const cursor = editor.getCursor();          // 🆕 preserva cursor
+        const cursor = editor.getCursor();
         editor.setValue(updatedHTML);
         editor.scrollTo(scrollInfo.left, scrollInfo.top);
-        editor.setCursor(cursor);                    // 🆕
+        editor.setCursor(cursor);
         Store.set(STORAGE_KEY, updatedHTML);
         setStatus('SYNC VISUAL', 'var(--neon-cyan)');
       } catch (e) {
@@ -1213,7 +1208,7 @@
       closeAllMenus();
       const code = editor.getValue();
       const mime = format === 'html' ? 'text/html;charset=utf-8' : 'text/plain;charset=utf-8';
-      const bom = format === 'html' ? '' : '\uFEFF'; // sin BOM en HTML
+      const bom = format === 'html' ? '' : '\uFEFF';
       const blob = new Blob([bom + code], { type: mime });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -1329,7 +1324,7 @@
       panStartScrollLeft = zoomWrapper.scrollLeft;
       panStartScrollTop = zoomWrapper.scrollTop;
       zoomWrapper.classList.add('panning');
-      previewOutput.style.pointerEvents = 'none'; // solo durante arrastre
+      previewOutput.style.pointerEvents = 'none';
     }
     function doPan(clientX, clientY) {
       if (!isPanning) return;
@@ -1385,7 +1380,6 @@
       }
     });
 
-    // Pinch zoom
     (() => {
       let pinchStartDist = 0, pinchStartZoom = 100;
       zoomWrapper.addEventListener('touchstart', (e) => {
@@ -1476,7 +1470,7 @@
     const savedMode = Store.get(MODE_KEY, window.innerWidth < 768 ? 'mobile' : 'desktop');
     setDeviceMode(savedMode);
 
-    const savedSkin = Store.get(SKIN_KEY, 'meow');   // default Meow
+    const savedSkin = Store.get(SKIN_KEY, 'meow');
     changeSkin(savedSkin);
 
     const savedTermColor = Store.get(TERM_COLOR_KEY, 'green');

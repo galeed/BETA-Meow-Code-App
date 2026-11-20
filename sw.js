@@ -4,6 +4,12 @@ const PRECACHE = [
   './index.html',
   './manifest.json',
 
+  // Iconos
+  './icon-180.png',
+  './icon-192.png',
+  './icon-512.png',
+  './icon-maskable-512.png',
+
   // CodeMirror
   'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css',
   'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/abbott.min.css',
@@ -20,7 +26,7 @@ const PRECACHE = [
   // PDF
   'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js',
 
-  // Google Fonts (hoja de estilos; las woff2 se cachean en runtime)
+  // Google Fonts
   'https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap'
 ];
 
@@ -28,7 +34,6 @@ self.addEventListener('install', (e) => {
   e.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache =>
-        // addAll falla entero si UNA falla → usamos add individual con catch
         Promise.all(PRECACHE.map(url =>
           cache.add(url).catch(err => console.warn('No precacheado:', url, err))
         ))
@@ -60,9 +65,6 @@ self.addEventListener('fetch', (e) => {
   if (req.url.startsWith('safari-extension://')) return;
   if (req.headers.get('range')) return;
 
-  // 🔁 Estrategia:
-  //  - Navegación → network-first con fallback a index.html cacheado
-  //  - Assets → cache-first con actualización en background
   if (req.mode === 'navigate') {
     e.respondWith(
       fetch(req)
@@ -80,7 +82,6 @@ self.addEventListener('fetch', (e) => {
     caches.match(req).then(cached => {
       if (cached) return cached;
       return fetch(req).then(res => {
-        // Aceptamos respuestas básicas, CORS y opacas (fuentes, imágenes sin CORS)
         const cacheable =
           res && (
             res.status === 200 ||
@@ -93,7 +94,6 @@ self.addEventListener('fetch', (e) => {
         }
         return res;
       }).catch(() => {
-        // ⚠️ NO devolver index.html para scripts/img → solo fallback a index si navegación
         return caches.match('./index.html');
       });
     })

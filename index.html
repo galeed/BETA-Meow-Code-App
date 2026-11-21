@@ -1028,6 +1028,132 @@
       document.getElementById('snippets-menu').classList.remove('show');
       document.getElementById('settings-menu').classList.toggle('show');
     }
+  const templates = {
+  landing: `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landing Page</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0f0a1a; color: #ede4ff; }
+    .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 20px; background: radial-gradient(circle at 20% 10%, #1b0f33 0%, #0f0a1a 60%); }
+    h1 { font-size: 3rem; background: linear-gradient(90deg, #b16dff, #ff4d94); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; }
+    p { font-size: 1.2rem; color: #8a7ba8; margin-bottom: 30px; max-width: 600px; }
+    .btn { background: linear-gradient(135deg, #b16dff, #ff4d94); color: #fff; padding: 15px 40px; border: none; border-radius: 30px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+    .btn:hover { filter: brightness(1.2); }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div>
+      <h1>🐱 Meow Code</h1>
+      <p>Editor HTML visual con vista previa en vivo. Crea, edita y exporta tus proyectos directamente desde el navegador.</p>
+      <button class="btn" onclick="alert('¡Funciona!')">Comenzar</button>
+    </div>
+  </div>
+</body>
+</html>`,
+
+  card: `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Tarjeta de Perfil</title>
+  <style>
+    body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #f0f2f5; font-family: system-ui, sans-serif; margin: 0; }
+    .card { background: #fff; border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 320px; }
+    .avatar { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, #b16dff, #ff4d94); margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
+    h2 { margin: 0 0 8px; color: #333; }
+    .role { color: #888; font-size: 0.9rem; margin-bottom: 20px; }
+    .stats { display: flex; justify-content: space-around; border-top: 1px solid #eee; padding-top: 20px; }
+    .stat strong { display: block; font-size: 1.3rem; color: #b16dff; }
+    .stat span { font-size: 0.8rem; color: #888; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="avatar">🐱</div>
+    <h2>Meow Developer</h2>
+    <div class="role">Frontend Engineer</div>
+    <div class="stats">
+      <div class="stat"><strong>42</strong><span>Proyectos</span></div>
+      <div class="stat"><strong>1.2k</strong><span>Seguidores</span></div>
+      <div class="stat"><strong>89</strong><span>Likes</span></div>
+    </div>
+  </div>
+</body>
+</html>`,
+
+  form: `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulario</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+    form { background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 100%; max-width: 400px; }
+    h2 { margin-top: 0; color: #333; }
+    label { display: block; margin: 15px 0 5px; font-weight: 600; color: #555; font-size: 0.9rem; }
+    input, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; box-sizing: border-box; }
+    button { width: 100%; margin-top: 20px; padding: 12px; background: #b16dff; color: #fff; border: none; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+    button:hover { background: #9a5ae0; }
+  </style>
+</head>
+<body>
+  <form onsubmit="event.preventDefault(); alert('Formulario enviado (demo)');">
+    <h2>Contacto</h2>
+    <label>Nombre</label>
+    <input type="text" placeholder="Tu nombre" required>
+    <label>Email</label>
+    <input type="email" placeholder="tu@email.com" required>
+    <label>Mensaje</label>
+    <textarea rows="4" placeholder="Escribe tu mensaje..." required></textarea>
+    <button type="submit">Enviar</button>
+  </form>
+</body>
+</html>`,
+
+  grid: `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Grid de Productos</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f4f7f6; padding: 40px 20px; margin: 0; }
+    h1 { text-align: center; color: #333; margin-bottom: 30px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto; }
+    .item { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08); transition: transform 0.2s; }
+    .item:hover { transform: translateY(-4px); }
+    .item-img { height: 180px; background: linear-gradient(135deg, #b16dff, #ff4d94); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+    .item-body { padding: 20px; }
+    .item-body h3 { margin: 0 0 8px; color: #333; }
+    .item-body p { color: #888; font-size: 0.9rem; margin: 0 0 12px; }
+    .price { font-size: 1.2rem; font-weight: bold; color: #b16dff; }
+  </style>
+</head>
+<body>
+  <h1>Productos</h1>
+  <div class="grid">
+    <div class="item"><div class="item-img">🎧</div><div class="item-body"><h3>Auriculares</h3><p>Sonido de alta calidad</p><div class="price">$79</div></div></div>
+    <div class="item"><div class="item-img">⌚</div><div class="item-body"><h3>Smartwatch</h3><p>Monitor de actividad</p><div class="price">$199</div></div></div>
+    <div class="item"><div class="item-img">📱</div><div class="item-body"><h3>Smartphone</h3><p>Pantalla AMOLED</p><div class="price">$699</div></div></div>
+  </div>
+</body>
+</html>`
+};
+
+function loadTemplate(name) {
+  if (confirm('¿Reemplazar el código actual con esta plantilla?')) {
+    editor.setValue(templates[name]);
+    Store.set(STORAGE_KEY, templates[name]);
+    updatePreview(true);
+    toast('Plantilla cargada');
+    closeAllMenus();
+  }
+}
+    
     function toggleSnippetsMenu() {
       document.getElementById('settings-menu').classList.remove('show');
       renderSnippetsList();
